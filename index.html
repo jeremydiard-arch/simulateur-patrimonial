@@ -3203,7 +3203,12 @@ function SimulateurPatrimoine() {
     style: {
       color: "#3b5249"
     }
-  }, "Delta loyers−échéances"), /*#__PURE__*/React.createElement("th", null, "IS total"), /*#__PURE__*/React.createElement("th", null, "CF immo"), /*#__PURE__*/React.createElement("th", null, "CRD total"), /*#__PURE__*/React.createElement("th", null, "Patrimoine immo net"))), /*#__PURE__*/React.createElement("tbody", null, dataConsolide.map(d => /*#__PURE__*/React.createElement("tr", {
+  }, "Delta loyers−échéances"), /*#__PURE__*/React.createElement("th", null, "IS total"), /*#__PURE__*/React.createElement("th", null, "CF immo"), /*#__PURE__*/React.createElement("th", null, "Valeur brute biens"), /*#__PURE__*/React.createElement("th", null, "CRD total"), /*#__PURE__*/React.createElement("th", {
+    style: {
+      color: "#9c6b3e",
+      fontWeight: 700
+    }
+  }, "Valeur nette (bien−CRD)"))), /*#__PURE__*/React.createElement("tbody", null, dataConsolide.map(d => /*#__PURE__*/React.createElement("tr", {
     key: d.annee,
     style: {
       textAlign: "right"
@@ -3214,10 +3219,6 @@ function SimulateurPatrimoine() {
       color: "#6b6258"
     }
   }, d.annee), /*#__PURE__*/React.createElement("td", {
-    style: {
-      color: "#3b5249"
-    }
-  }, fmt0(dataPlacement[d.annee - 1].valeur), " €"), /*#__PURE__*/React.createElement("td", {
     style: {
       fontWeight: 700,
       color: dataPlacementNet[d.annee - 1].retraitAnnuel > 0 ? "#a14d3a" : "#3b5249",
@@ -3249,9 +3250,14 @@ function SimulateurPatrimoine() {
       color: d.cf >= 0 ? "#3b5249" : "#a14d3a",
       fontWeight: 600
     }
-  }, fmt0(d.cf), " €"), /*#__PURE__*/React.createElement("td", null, fmt0(d.crd), " €"), /*#__PURE__*/React.createElement("td", {
+  }, fmt0(d.cf), " €"), /*#__PURE__*/React.createElement("td", {
     style: {
-      fontWeight: 600
+      color: "#9c6b3e"
+    }
+  }, fmt0(d.valBien), " €"), /*#__PURE__*/React.createElement("td", null, fmt0(d.crd), " €"), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontWeight: 700,
+      color: d.patrimoineNet >= 0 ? "#9c6b3e" : "#a14d3a"
     }
   }, fmt0(d.patrimoineNet), " €")))))), /*#__PURE__*/React.createElement("div", {
     className: "card",
