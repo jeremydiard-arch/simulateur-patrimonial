@@ -573,26 +573,18 @@ function simBien(b, isParams, horizon) {
   // Pour le patrimoine, on sépare :
   //   cfHorsCapital = loyers - charges - intérêts seulement - IS
   //   (le remboursement du capital est capturé par la baisse du CRD dans valNette)
-  let tresoCumule = 0; // trésorerie nette hors remboursement capital
   return amort.map(a => {
     const loyerBrut = loyerAnnuel;
     const charges = loyerBrut * b.chargesPct;
     const amortCompta = baseAmort * b.amortPct;
     const resultat = loyerBrut - charges - a.interets - amortCompta;
     const is = calcIS(resultat, seuilReduit, tauxReduit, tauxNormal);
-    // CF de trésorerie réel (ce qui rentre/sort de la caisse chaque année)
     const cf = loyerBrut - charges - a.mensAnnuelle - is;
-    // Pour le patrimoine : on soustrait seulement les intérêts (coût pur) + charges + IS
-    // Le capital remboursé n'est pas un appauvrissement : il réduit la dette (déjà dans valNette)
-    const cfPatrimoine = loyerBrut - charges - a.interets - is;
-    tresoCumule += cfPatrimoine;
     valBien *= 1 + b.revalo;
     loyerAnnuel *= 1 + revaloLoyer;
-    // Valeur nette = bien revalorisé - dette restante
+    // Patrimoine net immobilier = valeur de marché du bien − capital restant dû
     const valNette = valBien - a.crd;
-    // Patrimoine net = valeur nette du bien + trésorerie nette accumulée - apport initial
-    // (l'apport est un décaissement de départ, il réduit le patrimoine mobilisé)
-    const patrimoineNet = valNette + tresoCumule - b.apport;
+    const patrimoineNet = valNette; // valBien revalorisé - CRD : c'est tout
     return {
       annee: a.annee,
       loyerBrut,
@@ -604,7 +596,6 @@ function simBien(b, isParams, horizon) {
       is,
       cf,
       cashCumule: cf,
-      // CF trésorerie pour les tableaux
       valBien,
       crd: a.crd,
       valNette,
