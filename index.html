@@ -2219,8 +2219,7 @@ function SimulateurPatrimoine() {
   }, (_, i) => {
     const row = {
       annee: i + 1,
-      "Placement brut": Math.round(dataPlacement[i].valeur),
-      "Placement net (retraits CF)": Math.round(dataPlacementNet[i].valeur)
+      "Placement net": Math.round(dataPlacementNet[i].valeur)
     };
     biens.forEach((b, bi) => {
       if (b.actif && dataBiens[bi]) row[b.nom] = Math.round(dataBiens[bi][i].patrimoineNet);
@@ -3020,9 +3019,9 @@ function SimulateurPatrimoine() {
     value: fmtM(derniere.patrimoineNet),
     color: "#9c6b3e"
   }, {
-    label: "Placement brut à 20 ans",
-    value: fmtM(dataPlacement[HORIZON - 1].valeur),
-    color: "#3b5249"
+    label: "Placement net à 20 ans (après retraits CF)",
+    value: fmtM(dataPlacementNet[HORIZON - 1].valeur),
+    color: totalRetraits > 0 ? "#a14d3a" : "#3b5249"
   }, {
     label: "Placement net (après retraits CF)",
     value: fmtM(dataPlacementNet[HORIZON - 1].valeur),
@@ -3105,18 +3104,10 @@ function SimulateurPatrimoine() {
     }
   }), /*#__PURE__*/React.createElement(Line, {
     type: "monotone",
-    dataKey: "Placement brut",
+    dataKey: "Placement net",
     stroke: "#3b5249",
-    strokeWidth: 2,
-    dot: false,
-    strokeDasharray: "6 3"
-  }), /*#__PURE__*/React.createElement(Line, {
-    type: "monotone",
-    dataKey: "Placement net (retraits CF)",
-    stroke: "#a14d3a",
     strokeWidth: 2.5,
-    dot: false,
-    strokeDasharray: totalRetraits > 0 ? "1 0" : "6 3"
+    dot: false
   }), biens.map((b, bi) => b.actif && /*#__PURE__*/React.createElement(Line, {
     key: b.id,
     type: "monotone",
@@ -3201,10 +3192,6 @@ function SimulateurPatrimoine() {
       textAlign: "left"
     }
   }, "Année"), /*#__PURE__*/React.createElement("th", {
-    style: {
-      color: "#3b5249"
-    }
-  }, "Placement brut"), /*#__PURE__*/React.createElement("th", {
     style: {
       color: totalRetraits > 0 ? "#a14d3a" : "#3b5249",
       fontWeight: 700
@@ -3451,11 +3438,6 @@ function SimulateurPatrimoine() {
   }, "Retrait placement"), /*#__PURE__*/React.createElement("th", {
     style: {
       padding: "5px 4px",
-      color: "#3b5249"
-    }
-  }, "Placement brut"), /*#__PURE__*/React.createElement("th", {
-    style: {
-      padding: "5px 4px",
       color: "#a14d3a",
       fontWeight: 700
     }
@@ -3464,10 +3446,8 @@ function SimulateurPatrimoine() {
       padding: "5px 4px"
     }
   }, "Écart"))), /*#__PURE__*/React.createElement("tbody", null, dataConsolide.map((d, i) => {
-    const pBrut = dataPlacement[i].valeur;
     const pNet = dataPlacementNet[i].valeur;
     const ret = dataPlacementNet[i].retraitAnnuel;
-    const ecart = pNet - pBrut;
     return /*#__PURE__*/React.createElement("tr", {
       key: d.annee,
       style: {
@@ -3507,21 +3487,10 @@ function SimulateurPatrimoine() {
     }, ret > 0 ? "-" + fmt0(ret) + " €" : "—"), /*#__PURE__*/React.createElement("td", {
       style: {
         padding: "4px 4px",
-        color: "#3b5249"
-      }
-    }, fmt0(pBrut), " €"), /*#__PURE__*/React.createElement("td", {
-      style: {
-        padding: "4px 4px",
         fontWeight: 700,
-        color: pNet < pBrut ? "#a14d3a" : "#3b5249"
+        color: ret > 0 ? "#a14d3a" : "#3b5249"
       }
-    }, fmt0(pNet), " €"), /*#__PURE__*/React.createElement("td", {
-      style: {
-        padding: "4px 4px",
-        color: ecart >= 0 ? "#a39a8d" : "#a14d3a",
-        fontSize: 11
-      }
-    }, ecart === 0 ? "—" : (ecart > 0 ? "+" : "") + fmt0(ecart) + " €"));
+    }, fmt0(pNet), " €"));
   }))))), biens.map((b, bi) => {
     if (vue !== `bien-${bi}`) return null;
     const data = dataBiens[bi];
